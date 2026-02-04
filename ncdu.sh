@@ -7,16 +7,18 @@
 # date:         2019-11-25 ; Updated for XigmaNAS 12.1.0.4
 # date:         2021-04-03 ; Updated for XigmaNAS 12.2.0.4
 # date:         2023-03-19 ; Fetch files with 'pkg fetch', exact filenames not needed, thanks Nivigor!
+# date:         2026-02-04 ; Updated for XigmaNAS 13.3.0.5
 # purpose:      Install NCurses Disk Usage (ncdu) on XigmaNAS (embedded version).
 # Note:         Check the end of the page.
 #
 #----------------------- Set variables ------------------------------------------------------------------
 DIR=`dirname $0`;
+All="All/Hashed"
 #----------------------- Set Errors ---------------------------------------------------------------------
 _msg() { case $@ in
   0) echo "The script will exit now."; exit 0 ;;
   1) echo "No route to server, or file do not exist on server"; _msg 0 ;;
-  2) echo "Can't find ${PKG}-*.pkg on ${DIR}/All"; _msg 0 ;;
+  2) echo "Can't find ${PKG}-*.pkg on ${DIR}/${All}"; _msg 0 ;;
   3) echo "NCurses Disk Usage installed and ready! (ONLY USE DURING A SSH SESSION)"; exit 0 ;;
   4) echo "Always run this script using the full path: /mnt/.../directory/ncdu.sh"; _msg 0 ;;
 esac ; exit 0; }
@@ -26,8 +28,8 @@ cd $DIR;
 #----------------------- Download and decompress ncdu files if needed -----------------------------------
 PKG="ncdu"
 if [ ! -d ${DIR}/usr/local/bin ]; then
-  if [ ! -e ${DIR}/All/${PKG}-*.pkg ]; then pkg fetch -o ${DIR} -y ${PKG} || _msg 1; fi
-  if [ -f ${DIR}/All/${PKG}-*.pkg ]; then tar xzf ${DIR}/All/${PKG}-*.pkg || _msg 2;
+  if [ ! -e ${DIR}/${All}/${PKG}-*.pkg ]; then pkg fetch -o ${DIR} -y ${PKG} || _msg 1; fi
+  if [ -f ${DIR}/${All}/${PKG}-*.pkg ]; then tar xzf ${DIR}/${All}/${PKG}-*.pkg || _msg 2;
     rm ${DIR}/+*; rm -R ${DIR}/usr/local/man; rm -R ${DIR}/usr/local/share; fi
   if [ ! -d ${DIR}/usr/local/bin ] ; then _msg 4; fi
 fi
